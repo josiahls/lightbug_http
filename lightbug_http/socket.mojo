@@ -78,9 +78,9 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
     """The socket type."""
     var protocol: Byte
     """The protocol."""
-    var _local_address: AddrType
+    var _local_address: Self.AddrType
     """The local address of the socket (local address if bound)."""
-    var _remote_address: AddrType
+    var _remote_address: Self.AddrType
     """The remote address of the socket (peer's address if connected)."""
     var _closed: Bool
     """Whether the socket is closed."""
@@ -89,8 +89,8 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
 
     fn __init__(
         out self,
-        local_address: AddrType = AddrType(),
-        remote_address: AddrType = AddrType(),
+        local_address: Self.AddrType = Self.AddrType(),
+        remote_address: Self.AddrType = Self.AddrType(),
         socket_type: Int32 = SOCK_STREAM,
         protocol: Byte = 0,
     ) raises:
@@ -118,8 +118,8 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         fd: Int32,
         socket_type: Int32,
         protocol: Byte,
-        local_address: AddrType,
-        remote_address: AddrType = AddrType(),
+        local_address: Self.AddrType,
+        remote_address: Self.AddrType = Self.AddrType(),
     ):
         """
         Create a new socket object when you already have a socket file descriptor. Typically through socket.accept().
@@ -192,7 +192,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
 
         writer.write(
             "Socket[",
-            AddrType._type,
+            Self.AddrType._type,
             ", ",
             af(),
             "]",
@@ -210,7 +210,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             ")",
         )
 
-    fn local_address(ref self) -> ref [self._local_address] AddrType:
+    fn local_address(ref self) -> ref [self._local_address] Self.AddrType:
         """Return the local address of the socket as a UDP address.
 
         Returns:
@@ -218,7 +218,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         """
         return self._local_address
 
-    fn set_local_address(mut self, address: AddrType) -> None:
+    fn set_local_address(mut self, address: Self.AddrType) -> None:
         """Set the local address of the socket.
 
         Args:
@@ -226,7 +226,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         """
         self._local_address = address
 
-    fn remote_address(ref self) -> ref [self._remote_address] AddrType:
+    fn remote_address(ref self) -> ref [self._remote_address] Self.AddrType:
         """Return the remote address of the socket as a UDP address.
 
         Returns:
@@ -234,7 +234,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         """
         return self._remote_address
 
-    fn set_remote_address(mut self, address: AddrType) -> None:
+    fn set_remote_address(mut self, address: Self.AddrType) -> None:
         """Set the remote address of the socket.
 
         Args:
@@ -242,7 +242,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         """
         self._remote_address = address
 
-    fn accept(self) raises -> Socket[AddrType]:
+    fn accept(self) raises -> Socket[Self.AddrType]:
         """Accept a connection. The socket must be bound to an address and listening for connections.
         The return value is a connection where conn is a new socket object usable to send and receive data on the connection,
         and address is the address bound to the socket on the other end of the connection.
@@ -267,7 +267,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             local_address=self.local_address(),
         )
         var peer = new_socket.get_peer_name()
-        new_socket.set_remote_address(AddrType(peer[0], peer[1]))
+        new_socket.set_remote_address(Self.AddrType(peer[0], peer[1]))
         return new_socket^
 
     fn listen(self, backlog: UInt = 0) raises:
@@ -322,7 +322,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             raise Error("Socket.bind: Binding socket failed.")
 
         var local = self.get_sock_name()
-        self._local_address = AddrType(local[0], local[1])
+        self._local_address = Self.AddrType(local[0], local[1])
 
     fn get_sock_name(self) raises -> (String, UInt16):
         """Return the address of the socket.
@@ -438,7 +438,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             raise e
 
         var remote = self.get_peer_name()
-        self._remote_address = AddrType(remote[0], remote[1])
+        self._remote_address = Self.AddrType(remote[0], remote[1])
 
     fn send(self, buffer: Span[Byte]) raises -> Int:
         try:
