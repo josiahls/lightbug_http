@@ -117,12 +117,12 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
     # Operator dunders
     # ===-------------------------------------------------------------------===#
 
-    fn __contains__[U: EqualityComparable & Movable, //](self: OwningList[U, *_], value: U) -> Bool:
+    fn __contains__[U: Equatable & Movable, //](self: OwningList[U, *_], value: U) -> Bool:
         """Verify if a given value is present in the list.
 
         Parameters:
             U: The type of the elements in the list. Must implement the
-              traits `EqualityComparable`, `Copyable`, and `Movable`.
+              traits `Equatable`, `Copyable`, and `Movable`.
 
         Args:
             value: The value to find.
@@ -393,7 +393,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
 
     # TODO: Remove explicit self type when issue 1876 is resolved.
     fn index[
-        C: EqualityComparable & Movable, //
+        C: Equatable & Movable, //
     ](ref self: OwningList[C, *_], value: C, start: Int = 0, stop: Optional[Int] = None,) raises -> Int:
         """
         Returns the index of the first occurrence of a value in a list
@@ -413,7 +413,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
 
         Parameters:
             C: The type of the elements in the list. Must implement the
-                `EqualityComparable & Movable` trait.
+                `Equatable & Movable` trait.
 
         Returns:
             The index of the first occurrence of the value in the list.

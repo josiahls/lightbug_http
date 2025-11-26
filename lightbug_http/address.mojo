@@ -35,7 +35,7 @@ struct AddressConstants:
     alias EMPTY = ""
 
 
-trait Addr(Stringable, Representable, Writable, EqualityComparable, Movable, Copyable):
+trait Addr(Stringable, Representable, Writable, Equatable, Movable, Copyable):
     alias _type: StaticString
 
     fn __init__(out self):
@@ -70,7 +70,7 @@ trait AnAddrInfo:
 
 
 @fieldwise_init
-struct NetworkType(EqualityComparable, Movable, ImplicitlyCopyable):
+struct NetworkType(Equatable, Movable, ImplicitlyCopyable):
     var value: String
 
     alias empty = NetworkType("")

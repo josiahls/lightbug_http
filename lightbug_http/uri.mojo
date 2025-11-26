@@ -95,7 +95,7 @@ struct PortBounds:
 
 
 @fieldwise_init
-struct Scheme(Hashable, EqualityComparable, Representable, Stringable, Writable, ImplicitlyCopyable, Movable):
+struct Scheme(Hashable, Equatable, Representable, Stringable, Writable, ImplicitlyCopyable, Movable):
     var value: String
     alias HTTP = Self("http")
     alias HTTPS = Self("https")

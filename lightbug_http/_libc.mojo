@@ -93,7 +93,7 @@ alias in_port_t = c_ushort
 # Address Family Constants
 @fieldwise_init
 @register_passable("trivial")
-struct AddressFamily(EqualityComparable & Copyable & Movable):
+struct AddressFamily(Equatable & Copyable & Movable):
     var value: Int32
     alias AF_UNSPEC = Self(0)
     """unspecified"""
