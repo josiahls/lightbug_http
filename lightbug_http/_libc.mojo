@@ -1668,7 +1668,7 @@ fn recvfrom(
                 errno
             ))
 
-    return result
+    return c_size_t(result)
 
 
 fn _send(socket: c_int, buffer: UnsafePointer[c_void, mut=False], length: c_size_t, flags: c_int) -> c_ssize_t:

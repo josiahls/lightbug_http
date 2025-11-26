@@ -536,7 +536,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         if bytes_received == 0:
             raise Error("EOF")
 
-        return bytes_received
+        return UInt(bytes_received)
 
     fn receive(self, size: Int = default_buffer_size) raises -> List[Byte]:
         """Receive data from the socket into the buffer with capacity of `size` bytes.

@@ -50,7 +50,7 @@ struct Server(Movable):
         self._max_request_uri_length = max_request_uri_length
         self.tcp_keep_alive = tcp_keep_alive
         if max_concurrent_connections == 0:
-            self.max_concurrent_connections = DefaultConcurrency
+            self.max_concurrent_connections = UInt(DefaultConcurrency)
         else:
             self.max_concurrent_connections = max_concurrent_connections
 
