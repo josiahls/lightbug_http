@@ -1664,9 +1664,9 @@ fn recvfrom(
         elif errno == ENOMEM:
             raise "ReceiveError: Insufficient memory was available to fulfill the request."
         else:
-            raise "ReceiveError: An error occurred while attempting to receive data from the socket. Error code: " + String(
+            raise Error("ReceiveError: An error occurred while attempting to receive data from the socket. Error code: " + String(
                 errno
-            )
+            ))
 
     return result
 
