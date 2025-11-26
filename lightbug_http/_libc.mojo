@@ -755,7 +755,7 @@ fn socket(domain: c_int, type: c_int, protocol: c_int) raises -> c_int:
 
 
 fn _setsockopt[
-    origin: ImmutableOrigin
+    origin: ImmutOrigin
 ](
     socket: c_int,
     level: c_int,
@@ -1091,7 +1091,7 @@ fn getpeername(file_descriptor: c_int) raises -> sockaddr_in:
 
 
 fn _bind[
-    origin: ImmutableOrigin
+    origin: ImmutOrigin
 ](socket: c_int, address: Pointer[sockaddr_in, origin], address_len: socklen_t) -> c_int:
     """Libc POSIX `bind` function. Assigns the address specified by `address` to the socket referred to by
        the file descriptor `socket`.
@@ -1249,7 +1249,7 @@ fn listen(socket: c_int, backlog: c_int) raises:
 
 
 fn _accept[
-    address_origin: MutableOrigin, len_origin: Origin
+    address_origin: MutOrigin, len_origin: Origin
 ](socket: c_int, address: Pointer[sockaddr, address_origin], address_len: Pointer[socklen_t, len_origin],) -> c_int:
     """Libc POSIX `accept` function.
 
@@ -1357,7 +1357,7 @@ fn accept(socket: c_int) raises -> c_int:
 
 
 fn _connect[
-    origin: ImmutableOrigin
+    origin: ImmutOrigin
 ](socket: c_int, address: Pointer[sockaddr_in, origin], address_len: socklen_t) -> c_int:
     """Libc POSIX `connect` function.
 

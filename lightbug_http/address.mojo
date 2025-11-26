@@ -390,7 +390,7 @@ fn is_ipv6(network: NetworkType) -> Bool:
 
 
 fn parse_ipv6_bracketed_address[
-    origin: ImmutableOrigin
+    origin: ImmutOrigin
 ](address: StringSlice[origin]) raises -> (StringSlice[origin], UInt16):
     """Parse an IPv6 address enclosed in brackets.
 
@@ -415,7 +415,7 @@ fn parse_ipv6_bracketed_address[
 
 
 fn validate_no_brackets[
-    origin: ImmutableOrigin
+    origin: ImmutOrigin
 ](address: StringSlice[origin], start_idx: UInt16, end_idx: Optional[UInt16] = None) raises:
     """Validate that the address segment contains no brackets."""
     var segment: StringSlice[origin]
@@ -431,7 +431,7 @@ fn validate_no_brackets[
         raise Error("unexpected ']' in address")
 
 
-fn parse_port[origin: ImmutableOrigin](port_str: StringSlice[origin]) raises -> UInt16:
+fn parse_port[origin: ImmutOrigin](port_str: StringSlice[origin]) raises -> UInt16:
     """Parse and validate port number."""
     if port_str == AddressConstants.EMPTY:
         raise MissingPortError
@@ -443,7 +443,7 @@ fn parse_port[origin: ImmutableOrigin](port_str: StringSlice[origin]) raises -> 
     return UInt16(port)
 
 
-fn parse_address[origin: ImmutableOrigin](network: NetworkType, address: StringSlice[origin]) raises -> (String, UInt16):
+fn parse_address[origin: ImmutOrigin](network: NetworkType, address: StringSlice[origin]) raises -> (String, UInt16):
     """Parse an address string into a host and port.
 
     Args:
@@ -551,7 +551,7 @@ fn binary_ip_to_string[address_family: AddressFamily](var ip_address: UInt32) ra
 
 
 fn _getaddrinfo[
-    T: AnAddrInfo, hints_origin: ImmutableOrigin, result_origin: MutableOrigin, //
+    T: AnAddrInfo, hints_origin: ImmutOrigin, result_origin: MutOrigin, //
 ](
     nodename: UnsafePointer[c_char, mut=False],
     servname: UnsafePointer[c_char, mut=False],
