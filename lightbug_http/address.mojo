@@ -148,27 +148,22 @@ struct TCPAddr[network: NetworkType = NetworkType.tcp4](Addr, ImplicitlyCopyable
         self.port = port
         self.zone = ""
 
-    fn __init__(out self, network: NetworkType, ip: String, port: UInt16, zone: String = ""):
-        self.ip = ip
-        self.port = port
-        self.zone = zone
-
     @always_inline
     fn address_family(self) -> Int:
-        if network == NetworkType.tcp4:
+        if Self.network == NetworkType.tcp4:
             return Int(AddressFamily.AF_INET.value)
-        elif network == NetworkType.tcp6:
+        elif Self.network == NetworkType.tcp6:
             return Int(AddressFamily.AF_INET6.value)
         else:
             return Int(AddressFamily.AF_UNSPEC.value)
 
     @always_inline
     fn is_v4(self) -> Bool:
-        return network == NetworkType.tcp4
+        return Self.network == NetworkType.tcp4
 
     @always_inline
     fn is_v6(self) -> Bool:
-        return network == NetworkType.tcp6
+        return Self.network == NetworkType.tcp6
 
     @always_inline
     fn is_unix(self) -> Bool:
@@ -209,27 +204,22 @@ struct UDPAddr[network: NetworkType = NetworkType.udp4](Addr, ImplicitlyCopyable
         self.port = port
         self.zone = ""
 
-    fn __init__(out self, network: NetworkType, ip: String, port: UInt16):
-        self.ip = ip
-        self.port = port
-        self.zone = ""
-
     @always_inline
     fn address_family(self) -> Int:
-        if network == NetworkType.tcp4:
+        if Self.network == NetworkType.tcp4:
             return Int(AddressFamily.AF_INET.value)
-        elif network == NetworkType.tcp6:
+        elif Self.network == NetworkType.tcp6:
             return Int(AddressFamily.AF_INET6.value)
         else:
             return Int(AddressFamily.AF_UNSPEC.value)
 
     @always_inline
     fn is_v4(self) -> Bool:
-        return network == NetworkType.udp4
+        return Self.network == NetworkType.udp4
 
     @always_inline
     fn is_v6(self) -> Bool:
-        return network == NetworkType.udp6
+        return Self.network == NetworkType.udp6
 
     @always_inline
     fn is_unix(self) -> Bool:
@@ -391,7 +381,7 @@ fn is_ipv6(network: NetworkType) -> Bool:
 
 fn parse_ipv6_bracketed_address[
     origin: ImmutOrigin
-](address: StringSlice[origin]) raises -> (StringSlice[origin], UInt16):
+](address: StringSlice[origin]) raises -> Tuple[StringSlice[origin], UInt16]:
     """Parse an IPv6 address enclosed in brackets.
 
     Returns:
@@ -443,7 +433,7 @@ fn parse_port[origin: ImmutOrigin](port_str: StringSlice[origin]) raises -> UInt
     return UInt16(port)
 
 
-fn parse_address[origin: ImmutOrigin](network: NetworkType, address: StringSlice[origin]) raises -> (String, UInt16):
+fn parse_address[origin: ImmutOrigin](network: NetworkType, address: StringSlice[origin]) raises -> Tuple[String, UInt16]:
     """Parse an address string into a host and port.
 
     Args:

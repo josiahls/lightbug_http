@@ -186,9 +186,9 @@ struct TCPConnection(Connection):
 
 
 struct UDPConnection[network: NetworkType]:
-    var socket: Socket[UDPAddr[network]]
+    var socket: Socket[UDPAddr[Self.network]]
 
-    fn __init__(out self, var socket: Socket[UDPAddr[network]]):
+    fn __init__(out self, var socket: Socket[UDPAddr[Self.network]]):
         self.socket = socket^
 
     fn __moveinit__(out self, deinit existing: Self):
@@ -265,10 +265,10 @@ struct UDPConnection[network: NetworkType]:
     fn is_closed(self) -> Bool:
         return self.socket._closed
 
-    fn local_addr(self) -> ref [self.socket._local_address] UDPAddr[network]:
+    fn local_addr(self) -> ref [self.socket._local_address] UDPAddr[Self.network]:
         return self.socket.local_address()
 
-    fn remote_addr(self) -> ref [self.socket._remote_address] UDPAddr[network]:
+    fn remote_addr(self) -> ref [self.socket._remote_address] UDPAddr[Self.network]:
         return self.socket.remote_address()
 
 
