@@ -76,10 +76,10 @@ alias OutOfBoundsError = "Tried to read past the end of the ByteReader."
 struct ByteView[origin: Origin](Sized, Stringable):
     """Convenience wrapper around a Span of Bytes."""
 
-    var _inner: Span[Byte, origin]
+    var _inner: Span[Byte, Self.origin]
 
     @implicit
-    fn __init__(out self, b: Span[Byte, origin]):
+    fn __init__(out self, b: Span[Byte, Self.origin]):
         self._inner = b
 
     fn __len__(self) -> Int:
@@ -158,7 +158,7 @@ struct ByteView[origin: Origin](Sized, Stringable):
     fn __ne__(self, other: Span[Byte]) -> Bool:
         return not self == other
 
-    fn __iter__(self) -> _SpanIter[Byte, origin]:
+    fn __iter__(self) -> _SpanIter[Byte, Self.origin]:
         return self._inner.__iter__()
 
     fn find(self, target: Byte) -> Int:
@@ -199,10 +199,10 @@ struct ByteView[origin: Origin](Sized, Stringable):
 
 
 struct ByteReader[origin: Origin](Sized):
-    var _inner: Span[Byte, origin]
+    var _inner: Span[Byte, Self.origin]
     var read_pos: Int
 
-    fn __init__(out self, b: Span[Byte, origin]):
+    fn __init__(out self, b: Span[Byte, Self.origin]):
         self._inner = b
         self.read_pos = 0
 
@@ -227,7 +227,7 @@ struct ByteReader[origin: Origin](Sized):
             raise EndOfReaderError
         return self._inner[self.read_pos]
 
-    fn read_bytes(mut self, n: Int = -1) raises -> ByteView[origin]:
+    fn read_bytes(mut self, n: Int = -1) raises -> ByteView[Self.origin]:
         var count = n
         var start = self.read_pos
         if n == -1:
@@ -239,7 +239,7 @@ struct ByteReader[origin: Origin](Sized):
         self.read_pos += count
         return self._inner[start : start + count]
 
-    fn read_until(mut self, char: Byte) -> ByteView[origin]:
+    fn read_until(mut self, char: Byte) -> ByteView[Self.origin]:
         var start = self.read_pos
         for i in range(start, len(self._inner)):
             if self._inner[i] == char:
@@ -249,10 +249,10 @@ struct ByteReader[origin: Origin](Sized):
         return self._inner[start : self.read_pos]
 
     @always_inline
-    fn read_word(mut self) -> ByteView[origin]:
+    fn read_word(mut self) -> ByteView[Self.origin]:
         return self.read_until(BytesConstant.whitespace)
 
-    fn read_line(mut self) -> ByteView[origin]:
+    fn read_line(mut self) -> ByteView[Self.origin]:
         var start = self.read_pos
         for i in range(start, len(self._inner)):
             if is_newline(self._inner[i]):
