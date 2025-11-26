@@ -2116,11 +2116,13 @@ fn get_errno() -> c_int:
         A copy of the current value of `errno` for the current thread.
     """
 
-    @parameter
-    if CompilationTarget.is_windows():
-        var errno = stack_allocation[1, c_int]()
-        _ = external_call["_get_errno", c_void](errno)
-        return errno[]
-    else:
-        alias loc = "__error" if CompilationTarget.is_macos() else "__errno_location"
-        return external_call[loc, UnsafePointer[c_int]]()[]
+    # TODO: stdlib for now is narrowing / not indicating windows support
+    # in the near future.
+    # @parameter
+    # if CompilationTarget.is_windows():
+    #     var errno = stack_allocation[1, c_int]()
+    #     _ = external_call["_get_errno", c_void](errno)
+    #     return errno[]
+    # else:
+    alias loc = "__error" if CompilationTarget.is_macos() else "__errno_location"
+    return external_call[loc, UnsafePointer[c_int]]()[]
