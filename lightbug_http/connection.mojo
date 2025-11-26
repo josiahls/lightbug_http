@@ -150,7 +150,7 @@ struct TCPConnection(Connection):
 
     fn read(self, mut buf: Bytes) raises -> Int:
         try:
-            return self.socket.receive(buf)
+            return Int(self.socket.receive(buf))
         except e:
             if String(e) == "EOF":
                 raise e
@@ -235,7 +235,7 @@ struct UDPConnection[network: NetworkType]:
         Raises:
             Error: If an error occurred while writing data.
         """
-        return self.socket.send_to(src, address.ip, address.port)
+        return Int(self.socket.send_to(src, address.ip, address.port))
 
     fn write_to(mut self, src: Span[Byte], host: String, port: UInt16) raises -> Int:
         """Writes data to the underlying file descriptor.
@@ -251,7 +251,7 @@ struct UDPConnection[network: NetworkType]:
         Raises:
             Error: If an error occurred while writing data.
         """
-        return self.socket.send_to(src, host, port)
+        return Int(self.socket.send_to(src, host, port))
 
     fn close(mut self) raises:
         self.socket.close()
