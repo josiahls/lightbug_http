@@ -622,7 +622,7 @@ fn getaddrinfo[
         while err[i] != 0:
             i += 1
 
-        msg.write_bytes(Span[Byte, __origin_of(err)](ptr=err.bitcast[c_uchar](), length=i))
+        msg.write_bytes(Span[Byte, origin_of(err)](ptr=err.bitcast[c_uchar](), length=i))
         raise Error("getaddrinfo: ", msg)
 
 

@@ -135,7 +135,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
                 return True
         return False
 
-    fn __iter__(ref self) -> _OwningListIter[Self.T, __origin_of(self)]:
+    fn __iter__(ref self) -> _OwningListIter[Self.T, origin_of(self)]:
         """Iterate over elements of the list, returning immutable references.
 
         Returns:

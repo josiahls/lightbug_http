@@ -88,7 +88,7 @@ struct ListenConfig:
         self._keep_alive = keep_alive
 
     fn listen[network: NetworkType = NetworkType.tcp4](mut self, address: String) raises -> NoTLSListener:
-        var local = parse_address[__origin_of(address)](network, address)
+        var local = parse_address[origin_of(address)](network, address)
         var addr = TCPAddr(String(local[0]), local[1])
         var socket: Socket[TCPAddr]
         try:
