@@ -178,7 +178,7 @@ struct Server(Movable):
 
             var request: HTTPRequest
             try:
-                request = HTTPRequest.from_bytes(self.address(), max_request_body_size, max_request_uri_length, request_buffer)
+                request = HTTPRequest.from_bytes(self.address(), Int(max_request_body_size), Int(max_request_uri_length), request_buffer)
                 var response: HTTPResponse
                 var close_connection = (not self.tcp_keep_alive) or request.connection_close()
                 try:
