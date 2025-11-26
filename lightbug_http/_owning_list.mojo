@@ -28,19 +28,19 @@ struct _OwningListIter[
         forward: The iteration direction. `False` is backwards.
     """
 
-    alias list_type = OwningList[T]
+    alias list_type = OwningList[Self.T]
 
     var index: Int
-    var src: Pointer[Self.list_type, list_origin]
+    var src: Pointer[Self.list_type, Self.list_origin]
 
     fn __iter__(self) -> Self:
         return self.copy()
 
     fn __next__(
         mut self,
-    ) -> Pointer[T, list_origin]:
+    ) -> Pointer[Self.T, Self.list_origin]:
         @parameter
-        if forward:
+        if Self.forward:
             self.index += 1
             return Pointer(to=self.src[][self.index - 1])
         else:
@@ -53,7 +53,7 @@ struct _OwningListIter[
 
     fn __len__(self) -> Int:
         @parameter
-        if forward:
+        if Self.forward:
             return len(self.src[]) - self.index
         else:
             return self.index
@@ -70,7 +70,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
     """
 
     # Fields
-    var data: UnsafePointer[T]
+    var data: UnsafePointer[Self.T]
     """The underlying storage for the list."""
     var size: Int
     """The number of elements in the list."""
@@ -83,7 +83,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
 
     fn __init__(out self):
         """Constructs an empty list."""
-        self.data = UnsafePointer[T]()
+        self.data = UnsafePointer[Self.T]()
         self.size = 0
         self.capacity = 0
 
@@ -93,7 +93,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         Args:
             capacity: The requested capacity of the list.
         """
-        self.data = UnsafePointer[T].alloc(capacity)
+        self.data = UnsafePointer[Self.T].alloc(capacity)
         self.size = 0
         self.capacity = capacity
 
@@ -135,7 +135,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
                 return True
         return False
 
-    fn __iter__(ref self) -> _OwningListIter[T, __origin_of(self)]:
+    fn __iter__(ref self) -> _OwningListIter[Self.T, __origin_of(self)]:
         """Iterate over elements of the list, returning immutable references.
 
         Returns:
@@ -237,10 +237,10 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         Returns:
             The bytecount of the List.
         """
-        return len(self) * size_of[T]()
+        return len(self) * size_of[Self.T]()
 
     fn _realloc(mut self, new_capacity: Int):
-        var new_data = UnsafePointer[T].alloc(new_capacity)
+        var new_data = UnsafePointer[Self.T].alloc(new_capacity)
 
         _move_pointee_into_many_elements(
             dest=new_data,
@@ -253,7 +253,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         self.data = new_data
         self.capacity = new_capacity
 
-    fn append(mut self, var value: T):
+    fn append(mut self, var value: Self.T):
         """Appends a value to this list.
 
         Args:
@@ -264,7 +264,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         (self.data + self.size).init_pointee_move(value^)
         self.size += 1
 
-    fn insert(mut self, i: Int, var value: T):
+    fn insert(mut self, i: Int, var value: Self.T):
         """Inserts a value to the list at the given index.
         `a.insert(len(a), value)` is equivalent to `a.append(value)`.
 
@@ -333,7 +333,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         # list.
         self.size = final_size
 
-    fn pop(mut self, i: Int = -1) -> T:
+    fn pop(mut self, i: Int = -1) -> Self.T:
         """Pops a value from the list at the given index.
 
         Args:
@@ -449,19 +449,19 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
             (self.data + i).destroy_pointee()
         self.size = 0
 
-    fn steal_data(mut self) -> UnsafePointer[T]:
+    fn steal_data(mut self) -> UnsafePointer[Self.T]:
         """Take ownership of the underlying pointer from the list.
 
         Returns:
             The underlying data.
         """
         var ptr = self.data
-        self.data = UnsafePointer[T]()
+        self.data = UnsafePointer[Self.T]()
         self.size = 0
         self.capacity = 0
         return ptr
 
-    fn __getitem__(ref self, idx: Int) -> ref [self] T:
+    fn __getitem__(ref self, idx: Int) -> ref [self] Self.T:
         """Gets the list element at the given index.
 
         Args:
@@ -486,7 +486,7 @@ struct OwningList[T: Movable](Movable, Sized, Boolable):
         return (self.data + normalized_idx)[]
 
     @always_inline
-    fn unsafe_ptr(self) -> UnsafePointer[T]:
+    fn unsafe_ptr(self) -> UnsafePointer[Self.T]:
         """Retrieves a pointer to the underlying memory.
 
         Returns:
