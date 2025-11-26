@@ -194,7 +194,7 @@ struct UDPConnection[network: NetworkType]:
     fn __moveinit__(out self, deinit existing: Self):
         self.socket = existing.socket^
 
-    fn read_from(mut self, size: Int = default_buffer_size) raises -> (Bytes, String, UInt16):
+    fn read_from(mut self, size: Int = default_buffer_size) raises -> Tuple[Bytes, String, UInt16]:
         """Reads data from the underlying file descriptor.
 
         Args:
@@ -208,7 +208,7 @@ struct UDPConnection[network: NetworkType]:
         """
         return self.socket.receive_from(size)
 
-    fn read_from(mut self, mut dest: Bytes) raises -> (UInt, String, UInt16):
+    fn read_from(mut self, mut dest: Bytes) raises -> Tuple[UInt, String, UInt16]:
         """Reads data from the underlying file descriptor.
 
         Args:

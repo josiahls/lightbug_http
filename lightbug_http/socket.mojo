@@ -324,7 +324,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         var local = self.get_sock_name()
         self._local_address = Self.AddrType(local[0], local[1])
 
-    fn get_sock_name(self) raises -> (String, UInt16):
+    fn get_sock_name(self) raises -> Tuple[String, UInt16]:
         """Return the address of the socket.
 
         Returns:
@@ -353,7 +353,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             binary_port_to_int(addr_in.sin_port)
         )
 
-    fn get_peer_name(self) raises -> (String, UInt16):
+    fn get_peer_name(self) raises -> Tuple[String, UInt16]:
         """Return the address of the peer connected to the socket.
 
         Returns:
@@ -566,7 +566,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         """
         return self._receive(buffer)
 
-    fn _receive_from(self, mut buffer: Bytes) raises -> (UInt, String, UInt16):
+    fn _receive_from(self, mut buffer: Bytes) raises -> Tuple[UInt, String, UInt16]:
         """Receive data from the socket into the buffer.
 
         Args:
@@ -601,7 +601,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             UInt16(binary_port_to_int(addr_in.sin_port)),
         )
 
-    fn receive_from(mut self, size: Int = default_buffer_size) raises -> (List[Byte], String, UInt16):
+    fn receive_from(mut self, size: Int = default_buffer_size) raises -> Tuple[List[Byte], String, UInt16]:
         """Receive data from the socket into the buffer dest.
 
         Args:
@@ -617,7 +617,7 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         _, host, port = self._receive_from(buffer)
         return buffer^, host, port
 
-    fn receive_from(mut self, mut dest: List[Byte]) raises -> (UInt, String, UInt16):
+    fn receive_from(mut self, mut dest: List[Byte]) raises -> Tuple[UInt, String, UInt16]:
         """Receive data from the socket into the buffer dest.
 
         Args:
