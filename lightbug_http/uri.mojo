@@ -28,7 +28,7 @@ fn unquote[expand_plus: Bool = False](input_str: String, disallowed_escapes: Lis
     var str_bytes = List[UInt8]()
     while current_idx < len(percent_idxs):
         var slice_end = percent_idxs[current_idx]
-        sub_strings.append(encoded_str[slice_start:slice_end])
+        sub_strings.append(String(encoded_str[slice_start:slice_end]))
 
         var current_offset = slice_end
         while current_idx < len(percent_idxs):
@@ -63,7 +63,7 @@ fn unquote[expand_plus: Bool = False](input_str: String, disallowed_escapes: Lis
         slice_start = current_offset
         current_idx += 1
 
-    sub_strings.append(encoded_str[slice_start:])
+    sub_strings.append(String(encoded_str[slice_start:]))
 
     return StaticString("").join(sub_strings)
 
