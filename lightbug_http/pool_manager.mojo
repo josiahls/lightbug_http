@@ -45,12 +45,12 @@ struct PoolKey(Hashable, KeyElement, Writable, Stringable, ImplicitlyCopyable):
 
 
 struct PoolManager[ConnectionType: Connection]():
-    var _connections: OwningList[ConnectionType]
+    var _connections: OwningList[Self.ConnectionType]
     var _capacity: Int
     var mapping: Dict[PoolKey, Int]
 
     fn __init__(out self, capacity: Int = 10):
-        self._connections = OwningList[ConnectionType](capacity=capacity)
+        self._connections = OwningList[Self.ConnectionType](capacity=capacity)
         self._capacity = capacity
         self.mapping = Dict[PoolKey, Int]()
 
@@ -60,7 +60,7 @@ struct PoolManager[ConnectionType: Connection]():
         )
         self.clear()
 
-    fn give(mut self, key: PoolKey, var value: ConnectionType) raises:
+    fn give(mut self, key: PoolKey, var value: Self.ConnectionType) raises:
         if key in self.mapping:
             self._connections[self.mapping[key]] = value^
             return
@@ -72,7 +72,7 @@ struct PoolManager[ConnectionType: Connection]():
         self.mapping[key] = self._connections.size - 1
         logger.debug("Checked in connection for peer:", String(key) + ", at index:", self._connections.size)
 
-    fn take(mut self, key: PoolKey) raises -> ConnectionType:
+    fn take(mut self, key: PoolKey) raises -> Self.ConnectionType:
         var index: Int
         try:
             index = self.mapping[key]
@@ -102,11 +102,11 @@ struct PoolManager[ConnectionType: Connection]():
     fn __contains__(self, key: PoolKey) -> Bool:
         return key in self.mapping
 
-    fn __setitem__(mut self, key: PoolKey, var value: ConnectionType) raises -> None:
+    fn __setitem__(mut self, key: PoolKey, var value: Self.ConnectionType) raises -> None:
         if key in self.mapping:
             self._connections[self.mapping[key]] = value^
         else:
             self.give(key, value^)
 
-    fn __getitem__(self, key: PoolKey) raises -> ref [self._connections] ConnectionType:
+    fn __getitem__(self, key: PoolKey) raises -> ref [self._connections] Self.ConnectionType:
         return self._connections[self.mapping[key]]
