@@ -525,7 +525,8 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
             bytes_received = recv(
                 self.fd,
                 buffer.unsafe_ptr().offset(size),
-                buffer.capacity - len(buffer),
+                # TODO: We should assert that this is not negative.
+                UInt(buffer.capacity - len(buffer)),
                 0,
             )
             buffer._len += bytes_received
@@ -584,9 +585,14 @@ struct Socket[AddrType: Addr & ImplicitlyCopyable, address_family: AddressFamily
         try:
             var size = len(buffer)
             bytes_received = recvfrom(
-                self.fd, buffer.unsafe_ptr().offset(size), buffer.capacity - len(buffer), 0, remote_address
+                self.fd, 
+                buffer.unsafe_ptr().offset(size), 
+                # TODO: We should assert that this is not negative.
+                UInt(buffer.capacity - len(buffer)), 
+                0, 
+                remote_address
             )
-            buffer._len += bytes_received
+            buffer._len += Int(bytes_received)
         except e:
             logger.error(e)
             raise Error("Socket._receive_from: Failed to read data from connection.")
